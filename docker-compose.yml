@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server/data:/app/data
+      - ./server/temp:/app/temp
+    env_file:
+      - ./server/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  client:
+    build: ./client
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://server:8000
+    depends_on:
+      - server
