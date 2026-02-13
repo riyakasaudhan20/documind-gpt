@@ -3,21 +3,36 @@ version: '3.8'
 services:
   server:
     build: ./server
+    container_name: documind-server
+    restart: always
     ports:
       - "8000:8000"
     volumes:
+      - ./server:/app
       - ./server/data:/app/data
       - ./server/temp:/app/temp
     env_file:
       - ./server/.env
     environment:
       - PYTHONUNBUFFERED=1
+    networks:
+      - documind-net
 
   client:
     build: ./client
+    container_name: documind-client
+    restart: always
     ports:
       - "8501:8501"
+    volumes:
+      - ./client:/app
     environment:
-      - API_URL=http://server:8000
+      - API_URL=http://documind-server:8000
     depends_on:
       - server
+    networks:
+      - documind-net
+
+networks:
+  documind-net:
+    driver: bridge
