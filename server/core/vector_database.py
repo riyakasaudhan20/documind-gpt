@@ -24,7 +24,7 @@ def get_embeddings(model_provider: str):
     return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L12-v2")
   elif model_provider == "gemini":
     return GoogleGenerativeAIEmbeddings(
-      model="models/text-embedding-004",
+      model="models/embedding-001",
       google_api_key=GOOGLE_API_KEY
     )
   else:
