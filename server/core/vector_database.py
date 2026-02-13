@@ -6,7 +6,7 @@ from fastapi import UploadFile
 from config.settings import GOOGLE_API_KEY, VECTORSTORE_DIRECTORY, MODEL_OPTIONS
 from core.document_processor import save_uploaded_file, load_documents_from_paths, split_documents_to_chunks
 
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 

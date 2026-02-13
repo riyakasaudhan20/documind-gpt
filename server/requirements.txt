@@ -1,7 +1,10 @@
 fastapi
 langchain
+langchain-core
 uvicorn
 langchain-community
+langchain-text-splitters
+langchain-huggingface
 langchain-groq
 langchain-google-genai
 chromadb
