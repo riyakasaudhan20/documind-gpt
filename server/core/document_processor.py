@@ -16,9 +16,12 @@ def validate_pdf(file: UploadFile, max_size_mb: int = 200):
     logger.warning(f"Invalid file type: {file.filename}")
     raise ValueError(f"{file.filename} is not a valid PDF file.")
 
-  file_size_mb = len(file.file.read()) / (1024 * 1024)
-  file.file.seek(0)
-
+  file_size_mb = (file.size or 0) / (1024 * 1024)
+  if file_size_mb == 0:
+    file.file.seek(0, 2)
+    file_size_mb = file.file.tell() / (1024 * 1024)
+    file.file.seek(0)
+  
   if file_size_mb > max_size_mb:
     logger.warning(f"File too large: {file.filename} ({file_size_mb:.2f} MB)")
     raise ValueError(f"PDF file size exceeds the maximum allowed size of {max_size_mb} MB.")
@@ -45,8 +48,11 @@ def load_documents_from_paths(file_paths: List[str]):
   for file_path in file_paths:
     loader = PyPDFLoader(file_path)
     loaded = loader.load()
-    logger.debug(f"Loaded {len(loaded)} documents from {file_path}")
-    docs.extend(loaded)
+    if not loaded:
+      logger.warning(f"No text content found in {file_path}. This might be a scanned PDF or images only.")
+    else:
+      logger.debug(f"Loaded {len(loaded)} pages from {file_path}")
+      docs.extend(loaded)
 
   return docs
 

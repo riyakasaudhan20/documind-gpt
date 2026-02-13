@@ -52,6 +52,10 @@ async def upsert_vectorstore_from_pdfs(uploaded_files: List[UploadFile], model_p
   file_paths = await save_uploaded_file(uploaded_files)
   docs = load_documents_from_paths(file_paths)
   chunks = split_documents_to_chunks(docs)
+  if not chunks:
+    logger.error("No text chunks were extracted from the uploaded PDFs.")
+    raise ValueError("No readable text found in the uploaded PDFs. Please ensure the documents are not scanned or empty.")
+  
   embedding = get_embeddings(model_provider)
 
   persist_path = VECTORSTORE_DIRECTORY[model_provider]
